@@ -3,9 +3,15 @@
 #include <string>
 #include <cstring>
 #include <sstream>
+#include <cmath>
 #include "hexbin.h"
 
 using namespace std;
+const int nphibits = 12;
+float int_to_float(int int_num){
+	float floatval = (int_num/(pow(2,nphibits-1)-1))*M_PI;
+	return floatval;
+}
 
 int main(){
 	const int nphibins = 27; //number of phi bins
@@ -22,8 +28,8 @@ int main(){
 		s = out.str();
 		fname1 = "phi" + s + "_n.dat";
 		fname2 = "phi" + s + "_p.dat";
-		in_tracks[0][i].open(fname1);
-		in_tracks[1][i].open(fname2);
+		in_tracks[0][i].open(fname1.c_str());
+		in_tracks[1][i].open(fname2.c_str());
 	}
 	for (int j = 0; j < nphibins; ++j){
 		ntrks[j] = 0;
@@ -44,7 +50,7 @@ int main(){
 		out << i;
 		s = out.str();
 		fname = "phi" + s + ".dat";
-		in_tracks_final[i].open(fname);
+		in_tracks_final[i].open(fname.c_str());
 	}
 
 	for (int i = 0; i < nphisectors; ++i){
@@ -57,11 +63,11 @@ int main(){
 					in_tracks_final[j] << line2 << endl;
 					ntrks[j] += 2;
 				}
-				else if (line1 != "0x000000000000000000000000" && line2 == "0x000000000000000000000000"){
+				else if (line1 != "0x000000000000000000000000" && line2 == "0x000000000000000000000000" && ntrks[j] < 339){
 					in_tracks_final[j] << line1 << endl;
 					ntrks[j] += 1;
 				}
-				else if (line1 == "0x000000000000000000000000" && line2 != "0x000000000000000000000000"){
+				else if (line1 == "0x000000000000000000000000" && line2 != "0x000000000000000000000000" && ntrks[j] < 339){
 					in_tracks_final[j] << line2 << endl;
 					ntrks[j] += 1;
 				}
