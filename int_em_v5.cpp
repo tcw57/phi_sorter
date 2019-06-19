@@ -80,7 +80,10 @@ int main(int argc, char ** argv){
 		in_tracks[i].open(filename.c_str());
 		ntrks[i] = 0;
 	}
-	
+	string line;
+	while (getline(in_tracks[23],line)){
+		cout << line << endl;
+	}
 	ofstream out_clusts;
 	string outname = "int_em_out.txt";
 	out_clusts.open(outname.c_str());

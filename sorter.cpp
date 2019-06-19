@@ -57,13 +57,13 @@ int main(){
 			int int2 = bin_to_int(phi_bin2);
 			float phi_float1 = int_to_float(int1);
 			float phi_float2 = int_to_float(int2); 
-			if (line1 != "0x000000000000000000000000" && line2 != "0x000000000000000000000000"){
+			if (line1 != "0x000000000000000000000000" && line2 != "0x000000000000000000000000"){ 
 				if (phi_float1 < -M_PI/27){
 					in_tracks_final[3*i] << line1 << endl;
 					ntrks[3*i] += 1;
 					if (phi_float2 < -M_PI/27){
-					in_tracks_final[3*i] << line2 << endl;	
-					ntrks[3*i] += 1;
+						in_tracks_final[3*i] << line2 << endl;	
+						ntrks[3*i] += 1;
 					}
 					else if (phi_float2 >= -phi_bin_width/2 && phi_float2 < phi_bin_width/2){	
 						in_tracks_final[3*i+1] << line2 << endl;
@@ -94,8 +94,8 @@ int main(){
 					in_tracks_final[3*i+2] << line1 << endl;
 					ntrks[3*i+2] += 1;
 					if (phi_float2 < -M_PI/27){
-					in_tracks_final[3*i] << line2 << endl;	
-					ntrks[3*i] += 1;
+						in_tracks_final[3*i] << line2 << endl;	
+						ntrks[3*i] += 1;
 					}
 					else if (phi_float2 >= -phi_bin_width/2 && phi_float2 < phi_bin_width/2){	
 						in_tracks_final[3*i+1] << line2 << endl;
@@ -106,7 +106,6 @@ int main(){
 						ntrks[3*i+2] += 1;
 					}
 				}
-				
 			}
 			else if (line1 != "0x000000000000000000000000" && line2 == "0x000000000000000000000000"){
 				if (phi_float1 < -M_PI/27){
@@ -115,11 +114,11 @@ int main(){
 				}
 				else if (phi_float1 >= -phi_bin_width/2 && phi_float1 < phi_bin_width/2){
 					in_tracks_final[3*i+1] << line1 << endl;
-					ntrks[3*i+1] += 1;
+					ntrks[3*i+1] += 1;	
 				}
 				else if (phi_float1 >= phi_bin_width/2){
 					in_tracks_final[3*i+2] << line1 << endl;
-					ntrks[3*i+2] += 1;
+					ntrks[3*i+2] += 1;	
 				}
 			}
 			else if (line1 == "0x000000000000000000000000" && line2 != "0x000000000000000000000000"){
@@ -133,27 +132,34 @@ int main(){
 				}
 				else if (phi_float2 >= phi_bin_width/2){
 					in_tracks_final[3*i+2] << line2 << endl;
-					continue;
+					ntrks[3*i+2] += 1;
 				}
+			}	
+		}
+		if (ntrks[3*i] < tpe){
+			for (int k = 0; k < (tpe - ntrks[3*i]); ++k){
+				in_tracks_final[3*i] << "0x000000000000000000000000" << endl;
 			}
-			else{
-				for (int k = 0; k < (3 + tpe - ntrks[3*i]); ++k){
-					in_tracks_final[3*i] << "0x000000000000000000000000" << endl;
-				}
-				for (int k = 0; k < (3 + tpe - ntrks[3*i+1]); ++k){
-					in_tracks_final[3*i+1] << "0x000000000000000000000000" << endl;
-				}
-				for (int k = 0; k < (3 + tpe - ntrks[3*i+2]); ++k){
-					in_tracks_final[3*i+2] << "0x000000000000000000000000" << endl;
-				}
+			
+		}
+		if (ntrks[3*i+1] < tpe){
+			for (int k = 0; k < (tpe - ntrks[3*i+1]); ++k){
+				in_tracks_final[3*i+1] << "0x000000000000000000000000" << endl;
 			}
+			
+		}
+		if (ntrks[3*i+2] < tpe){
+			for (int k = 0; k < (tpe - ntrks[3*i+2]); ++k){
+				in_tracks_final[3*i+2] << "0x000000000000000000000000" << endl;
+			}
+			
+		}
+
 		in_tracks_final[3*i].close();
 		in_tracks_final[3*i+1].close();
 		in_tracks_final[3*i+2].close();
 		in_tracks[0][i].close();
 		in_tracks[1][i].close();
-		}
-
 	}
 
 	return 0;
