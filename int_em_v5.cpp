@@ -38,7 +38,7 @@ int main(int argc, char ** argv){
 //	const float pTinvmax = 0.5;
      //number of bits the firmware will use for pT
 	const int pTbits = 15;
-	//const int ntbits = 12;
+	const int ntbits = 16; //this is for eta
 	const int nzbits = 12;
      //value of one bit of pT
 //	const float pTstep = pTmax / (pow(2, pTbits)-1);
@@ -80,10 +80,7 @@ int main(int argc, char ** argv){
 		in_tracks[i].open(filename.c_str());
 		ntrks[i] = 0;
 	}
-	string line;
-	while (getline(in_tracks[23],line)){
-		cout << line << endl;
-	}
+	
 	ofstream out_clusts;
 	string outname = "int_em_out.txt";
 	out_clusts.open(outname.c_str());
@@ -136,7 +133,7 @@ int main(int argc, char ** argv){
 //pTinverse-->pT_actual
 			pTinverse = bin_to_int(bin_data.substr(0, 15));
 			t = bin_to_int(bin_data.substr(27, 16)); //this is actually eta
-			z0 = bin_to_int(bin_data.substr(44, 12));
+			z0 = bin_to_int(bin_data.substr(43, 12));
 			track_data trkd;
 			if(bin_data.substr(95, 1) == "1"){
 				trkd.xbit = true;
@@ -177,6 +174,13 @@ int main(int argc, char ** argv){
 				trkd.eta = -1.0 * maxeta;
 			}
 			
+			if(1.0 * trkd.eta < pow(2, ntbits-1)){
+				trkd.eta += (int)pow(2, ntbits-1);
+			}
+			else {
+				trkd.eta -= (int)pow(2, ntbits-1);
+			}
+			
 			if(1.0 * z0 < pow(2, nzbits-1)){
 				z0 += (int)pow(2, nzbits-1);
 			}
@@ -185,6 +189,7 @@ int main(int argc, char ** argv){
 			}
 			trkd.z = -1.0*maxz + z0 * 2.0 * maxz /( pow(2, nzbits)-1);
 			trkd.phi = -1.0*maxphi + pslice * phistep + (phistep / 2);  
+			trkd.eta = -1.0*maxeta + trkd.eta*2.0*maxeta/(pow(2,ntbits)-1);
 			trkd.bincount = 0;
 			++ntracks;                                         
 			tracks.push_back(trkd);
